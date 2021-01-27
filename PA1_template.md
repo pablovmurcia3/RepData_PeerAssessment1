@@ -221,7 +221,6 @@ subdata <- dataimpute  %>% group_by(weektype, interval)  %>% summarise(meansteps
 ```
 
 ```r
-library(lattice)
 xyplot(meansteps ~ interval | weektype,
        data = subdata,
        xlab = "5-minute interval", 
@@ -234,4 +233,4 @@ xyplot(meansteps ~ interval | weektype,
 )
 ```
 
-![](PA1_template_files/figure-html/dplyr_lattice -1.png)<!-- -->
+![](PA1_template_files/figure-html/lattice-1.png)<!-- -->
