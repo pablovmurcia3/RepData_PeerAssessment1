@@ -226,7 +226,7 @@ xyplot(meansteps ~ interval | weektype,
        xlab = "5-minute interval", 
        ylab = "average steps across all the days",
        type ="l",
-       lwd= 2,
+       lwd= 1,
        layout = c(1, 2),
        main = "Daily pattern activity - Difference between weekdays and 
        weekends"
