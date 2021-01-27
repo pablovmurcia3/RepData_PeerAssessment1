@@ -29,16 +29,16 @@ With the tapply function we get a vector in which each element is the total numb
 
 
 ```r
-stepsperday <-tapply(data$steps, data$date, sum)
+stepsperday <- tapply(data$steps, data$date, sum)
 ```
 
 Then, with the hist function we can make an histogram of the total number of steps taken each day 
 
 
 ```r
-hist(stepsperday, col = "wheat", main = "Histogram of 
+hist(stepsperday, col = "wheat",main = "Histogram of 
      the total number steps taken each day")
-abline(v = mean(stepsperday, na.rm =TRUE), col = "blue", lwd = 4)
+abline(v = mean(stepsperday, na.rm =TRUE), col = "blue", lwd = 6)
 abline(v = median(stepsperday, na.rm =TRUE), col = "red", lwd = 4)
 legend("topright", lty = 1, col = c("blue","red"), 
        legend = c("Mean", "Median"),
@@ -108,7 +108,7 @@ So the 5-minute interval that contains the maximum number of steps, the peak in 
 
 ## **Imputing missing values**   
  
-The original dataset have some missing observations. This can induce bias in some calculations
+The original dataset have some missing observations. This can induce bias in some calculations.
  
 
 ```r
@@ -189,6 +189,8 @@ As we can see in the histogram, the main impacts of imputing the missing data is
 
 ## **Are there differences in activity patterns between weekdays and weekends?**
 
+In order to determine if there are differences between the patterns of the weekdays and weekends, we need first to create a new dummy variable that indicates if the observation was taken over the weekdays or the weekends. 
+
 
 ```r
 dataimpute$day <- as.factor(weekdays(dataimpute$date))
@@ -196,6 +198,7 @@ dataimpute$weektype <- ifelse(dataimpute$day %in% c("sábado","domingo"),
                               "weekend", "weekday")
 ```
 
+For the following computations is necessary to install and call two packages, lattice and dplr.
 
 
 ```r
@@ -207,18 +210,27 @@ install.packages("lattice")
 ```
 
 ```r
+install.packages("dplyr")
+```
+
+```
+## Warning: package 'dplyr' is in use and will not be installed
+```
+
+```r
 library(lattice)
 library(dplyr)
 ```
+
+With the dplyr package we summarise the original dataset. The idea is to have an average (across all days) of the number of steps  taken in each 5-minute average on the weekdays and on the weekends. 
 
 
 ```r
 subdata <- dataimpute  %>% group_by(weektype, interval)  %>% summarise(meansteps = mean(steps))
 ```
 
-```
-## `summarise()` regrouping output by 'weektype' (override with `.groups` argument)
-```
+With the summarised dataset, *subdata*, we proceed to plot a two-panel time series using the lattice package.
+
 
 ```r
 xyplot(meansteps ~ interval | weektype,
