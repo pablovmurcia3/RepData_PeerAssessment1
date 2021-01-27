@@ -459,7 +459,7 @@ dataimpute$weektype &lt;- ifelse(dataimpute$day %in% c(&quot;sábado&quot;,&quot
 library(dplyr)</code></pre>
 <pre class="r"><code>subdata &lt;- dataimpute  %&gt;% group_by(weektype, interval)  %&gt;% summarise(meansteps = mean(steps))</code></pre>
 <pre><code>## `summarise()` regrouping output by &#39;weektype&#39; (override with `.groups` argument)</code></pre>
-<pre class="r"><code>par(mar=c(4,6,4,4))
+<pre class="r"><code>library(lattice)
 xyplot(meansteps ~ interval | weektype,
        data = subdata,
        xlab = &quot;5-minute interval&quot;, 
