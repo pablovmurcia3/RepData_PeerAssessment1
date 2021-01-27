@@ -368,17 +368,20 @@ summary {
 
 <div id="loading-and-preprocessing-the-data" class="section level2">
 <h2><strong>Loading and preprocessing the data</strong></h2>
-<p>The following code unzip and read the data</p>
+<p>The following code unzips and read the data.</p>
 <pre class="r"><code>unzip(zipfile=&quot;activity.zip&quot;)
 data &lt;- read.csv(&quot;activity.csv&quot;)</code></pre>
-<p>In order to achieve better manipulation of the data is required to make some transformations. First, we change the class of the date variable, then, using this variable we create a new factor variable that only shows the day of the observation</p>
+<p>To achieve better manipulation of the data is required to make some transformations. First, we change the class of the date variable.</p>
 <pre class="r"><code>data$date &lt;- as.Date(data$date)</code></pre>
 </div>
 <div id="what-is-mean-total-number-of-steps-taken-per-day" class="section level2">
 <h2><strong>What is mean total number of steps taken per day?</strong></h2>
-<p>With the tapply function we get a vector in which each element is the total number of steps taken each day of the two months</p>
-<pre class="r"><code>stepsperday &lt;- tapply(data$steps, data$date, sum)</code></pre>
-<p>Then, with the hist function we can make an histogram of the total number of steps taken each day</p>
+<p>With the tapply function we get a vector in which each element is the total number of steps taken each day of the two months.</p>
+<pre class="r"><code>stepsperday &lt;- tapply(data$steps, data$date, sum)
+head(stepsperday)</code></pre>
+<pre><code>## 2012-10-01 2012-10-02 2012-10-03 2012-10-04 2012-10-05 2012-10-06 
+##         NA        126      11352      12116      13294      15420</code></pre>
+<p>Then, with the hist function we can make histogram of the total number of steps taken each day.</p>
 <pre class="r"><code>hist(stepsperday, col = &quot;wheat&quot;,main = &quot;Histogram of 
      the total number steps taken each day&quot;)
 abline(v = mean(stepsperday, na.rm =TRUE), col = &quot;blue&quot;, lwd = 6)
@@ -387,7 +390,7 @@ legend(&quot;topright&quot;, lty = 1, col = c(&quot;blue&quot;,&quot;red&quot;),
        legend = c(&quot;Mean&quot;, &quot;Median&quot;),
        cex = 0.75)</code></pre>
 <p><img src="data:image/png;base64,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" style="display: block; margin: auto;" /></p>
-<p>As you can see, the blue and the read lines represents the mean and the median, resrespectively.</p>
+<p>As you can see, the blue and the red lines represent the mean and the median, respectively.</p>
 <pre class="r"><code>mean &lt;- mean(stepsperday, na.rm = TRUE) 
 median &lt;- median(stepsperday, na.rm = TRUE)
 mean</code></pre>
@@ -400,7 +403,7 @@ mean</code></pre>
 <h2><strong>What is the average daily activity pattern?</strong></h2>
 <p>With the tapply function, we get a vector in which each element is the average number of steps (across all days) taken in each 5-minute average.</p>
 <pre class="r"><code>avstepsinterval  &lt;-tapply(data$steps, data$interval, mean, na.rm =TRUE)</code></pre>
-<p>With this vector we can plot a time series that shows the daily pattern activity</p>
+<p>With this vector we can plot a time series that shows the daily pattern activity.</p>
 <pre class="r"><code>par(mar=c(4,6,4,4))
 plot(names(avstepsinterval),avstepsinterval, type = &quot;l&quot;, ylab = &quot;average steps
      across all the days&quot;, xlab = &quot;5-minute interval&quot;, main =&quot;Daily 
@@ -410,16 +413,16 @@ plot(names(avstepsinterval),avstepsinterval, type = &quot;l&quot;, ylab = &quot;
 <pre class="r"><code>maxinte &lt;- names(avstepsinterval)[which.max(avstepsinterval)]
 maxinte</code></pre>
 <pre><code>## [1] &quot;835&quot;</code></pre>
-<p>So the 5-minute interval that contains the maximum number of steps, the peak in the plot, is 835</p>
+<p>So the 5-minute interval that contains the maximum number of steps, where is the peak, is 835.</p>
 </div>
 <div id="imputing-missing-values" class="section level2">
 <h2><strong>Imputing missing values</strong></h2>
-<p>The original dataset have some missing observations. This can induce bias in some calculations.</p>
+<p>The original dataset has some missing observations. This can induce bias in some calculations.</p>
 <pre class="r"><code>numnas &lt;- sum(is.na(data))
 numnas</code></pre>
 <pre><code>## [1] 2304</code></pre>
 <p>there are 2304 missing values.</p>
-<p>With an imput strategy we can fill all the missing values. In the following code chunk a create a new dataset (identical to the original) <em>dataimpute</em> and use a foor loop to assign to each missing value of the new dataset the mean of the corresponding 5-minute interval.</p>
+<p>With an imput strategy we can fill all the missing values. In the following code chunk I create a new dataset (identical to the original) <em>dataimpute</em> and use a for loop to assign to each missing value of the new dataset the mean of the corresponding 5-minute interval.</p>
 <pre class="r"><code>dataimpute &lt;- data
 for (i in seq_along(dataimpute$steps)) {
         if (is.na(dataimpute$steps[i])){
@@ -428,8 +431,8 @@ for (i in seq_along(dataimpute$steps)) {
 }</code></pre>
 <pre class="r"><code>sum(is.na(dataimpute))</code></pre>
 <pre><code>## [1] 0</code></pre>
-<p>We can see that in <em>dataimpute</em> there are 0 missing values</p>
-<p>With this new dataset we proceed to make an histogram of the total number of steps taken each day</p>
+<p>We can see that in <em>dataimpute</em> there are 0 missing values.</p>
+<p>With this new dataset we proceed to make a histogram of the total number of steps taken each day.</p>
 <pre class="r"><code>stepsperdaynew &lt;-tapply(dataimpute$steps, dataimpute$date, sum)
 hist(stepsperdaynew, col = &quot;wheat&quot;, main = &quot;Histogram of 
      the total number steps taken each day&quot;)
@@ -446,7 +449,7 @@ meannew</code></pre>
 <pre class="r"><code>medianew</code></pre>
 <pre><code>## [1] 10766.19</code></pre>
 <p>The mean is 1.076618910^{4} and the median 1.076618910^{4}.</p>
-<p>As we can see in the histogram, the main impacts of imputing the missing data is that the median and the mean fully equalize and the form distribution gets more symmetric.</p>
+<p>As we can see in the histogram, the main impacts of imputing the missing data are that the median and the mean fully equalize and the form distribution gets more symmetric.</p>
 </div>
 <div id="are-there-differences-in-activity-patterns-between-weekdays-and-weekends" class="section level2">
 <h2><strong>Are there differences in activity patterns between weekdays and weekends?</strong></h2>
@@ -455,11 +458,9 @@ meannew</code></pre>
 dataimpute$weektype &lt;- ifelse(dataimpute$day %in% c(&quot;sábado&quot;,&quot;domingo&quot;),
                               &quot;weekend&quot;, &quot;weekday&quot;)</code></pre>
 <p>For the following computations is necessary to install and call two packages, lattice and dplr.</p>
-<pre class="r"><code>install.packages(&quot;lattice&quot;)</code></pre>
-<pre><code>## Warning: package &#39;lattice&#39; is in use and will not be installed</code></pre>
-<pre class="r"><code>install.packages(&quot;dplyr&quot;)</code></pre>
-<pre><code>## Warning: package &#39;dplyr&#39; is in use and will not be installed</code></pre>
-<pre class="r"><code>library(lattice)
+<pre class="r"><code>install.packages(&quot;lattice&quot;)
+install.packages(&quot;dplyr&quot;)
+library(lattice)
 library(dplyr)</code></pre>
 <p>With the dplyr package we summarise the original dataset. The idea is to have an average (across all days) of the number of steps taken in each 5-minute average on the weekdays and on the weekends.</p>
 <pre class="r"><code>subdata &lt;- dataimpute  %&gt;% group_by(weektype, interval)  %&gt;% summarise(meansteps = mean(steps))</code></pre>

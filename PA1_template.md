@@ -8,14 +8,15 @@ output:
 
 ## **Loading and preprocessing the data**
 
-The following code unzip and read the data
+The following code unzips and read the data.
+
 
 ```r
 unzip(zipfile="activity.zip")
 data <- read.csv("activity.csv")
 ```
 
-In order to achieve better manipulation of the data is required to make some transformations. First, we change the class of the date variable, then, using this variable we create a new factor variable that only shows the day of the observation 
+To achieve better manipulation of the data is required to make some transformations. First, we change the class of the date variable.
 
 
 ```r
@@ -25,14 +26,20 @@ data$date <- as.Date(data$date)
 
 ## **What is mean total number of steps taken per day?**     
 
-With the tapply function we get a vector in which each element is the total number of steps taken each day of the two months
+With the tapply function we get a vector in which each element is the total number of steps taken each day of the two months.
 
 
 ```r
 stepsperday <- tapply(data$steps, data$date, sum)
+head(stepsperday)
 ```
 
-Then, with the hist function we can make an histogram of the total number of steps taken each day 
+```
+## 2012-10-01 2012-10-02 2012-10-03 2012-10-04 2012-10-05 2012-10-06 
+##         NA        126      11352      12116      13294      15420
+```
+
+Then, with the hist function we can make  histogram of the total number of steps taken each day.
 
 
 ```r
@@ -47,8 +54,7 @@ legend("topright", lty = 1, col = c("blue","red"),
 
 <img src="PA1_template_files/figure-html/histogram-1.png" style="display: block; margin: auto;" />
 
-As you can see, the blue and the read lines represents the mean and the median, resrespectively.
-
+As you can see, the blue and the red lines represent the mean and the median, respectively.
 
 
 ```r
@@ -74,14 +80,15 @@ The mean is 1.0766189\times 10^{4} and the median 10765.
   
 ## **What is the average daily activity pattern?**   
 
-With the tapply function, we get a vector in which each element is the average  number of steps (across all days) taken in each 5-minute average.
+With the tapply function, we get a vector in which each element is the average number of steps (across all days) taken in each 5-minute average.
 
 
 ```r
 avstepsinterval  <-tapply(data$steps, data$interval, mean, na.rm =TRUE)
 ```
 
-With this vector we can plot a time series that shows the daily pattern activity
+With this vector we can plot a time series that shows the daily pattern activity.
+
 
 ```r
 par(mar=c(4,6,4,4))
@@ -94,6 +101,7 @@ plot(names(avstepsinterval),avstepsinterval, type = "l", ylab = "average steps
 
 As we can see, there is a significant peak somewhere between the intervals 600 and 1000. 
 
+
 ```r
 maxinte <- names(avstepsinterval)[which.max(avstepsinterval)]
 maxinte
@@ -103,12 +111,12 @@ maxinte
 ## [1] "835"
 ```
 
-So the 5-minute interval that contains the maximum number of steps, the peak in the plot, is 835
+So the 5-minute interval that contains the maximum number of steps, where is the peak, is 835.
 
 
 ## **Imputing missing values**   
  
-The original dataset have some missing observations. This can induce bias in some calculations.
+The original dataset has some missing observations. This can induce bias in some calculations.
  
 
 ```r
@@ -122,8 +130,7 @@ numnas
 
 there are 2304 missing values.
 
-
-With an imput strategy we can fill all the missing values. In the following code chunk a create a new dataset (identical to the original) *dataimpute* and use a foor loop to assign to each missing value of the new dataset the mean of the corresponding 5-minute interval.
+With an imput strategy we can fill all the missing values. In the following code chunk I create a new dataset (identical to the original) *dataimpute* and use a for loop to assign to each missing value of the new dataset the mean of the corresponding 5-minute interval.
 
 
 ```r
@@ -145,9 +152,9 @@ sum(is.na(dataimpute))
 ## [1] 0
 ```
 
-We can see that in *dataimpute* there are 0 missing values
+We can see that in *dataimpute* there are 0 missing values.
 
-With this new dataset we proceed to make an histogram of the total number of steps taken each day 
+With this new dataset we proceed to make a histogram of the total number of steps taken each day.
 
 
 ```r
@@ -184,7 +191,7 @@ medianew
 
 The mean is 1.0766189\times 10^{4} and the median 1.0766189\times 10^{4}.
 
-As we can see in the histogram, the main impacts of imputing the missing data is that the median and the mean fully equalize and the form distribution gets more symmetric.
+As we can see in the histogram, the main impacts of imputing the missing data are that the median and the mean fully equalize and the form distribution gets more symmetric.
 
 
 ## **Are there differences in activity patterns between weekdays and weekends?**
@@ -203,26 +210,12 @@ For the following computations is necessary to install and call two packages, la
 
 ```r
 install.packages("lattice")
-```
-
-```
-## Warning: package 'lattice' is in use and will not be installed
-```
-
-```r
 install.packages("dplyr")
-```
-
-```
-## Warning: package 'dplyr' is in use and will not be installed
-```
-
-```r
 library(lattice)
 library(dplyr)
 ```
 
-With the dplyr package we summarise the original dataset. The idea is to have an average (across all days) of the number of steps  taken in each 5-minute average on the weekdays and on the weekends. 
+With the dplyr package we summarise the original dataset. The idea is to have an average (across all days) of the number of steps taken in each 5-minute average on the weekdays and on the weekends. 
 
 
 ```r
