@@ -199,6 +199,14 @@ dataimpute$weektype <- ifelse(dataimpute$day %in% c("sábado","domingo"),
 
 
 ```r
+install.packages("lattice")
+```
+
+```
+## Warning: package 'lattice' is in use and will not be installed
+```
+
+```r
 library(lattice)
 library(dplyr)
 ```

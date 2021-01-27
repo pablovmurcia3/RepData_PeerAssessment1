@@ -453,6 +453,8 @@ meannew</code></pre>
 <pre class="r"><code>dataimpute$day &lt;- as.factor(weekdays(dataimpute$date))
 dataimpute$weektype &lt;- ifelse(dataimpute$day %in% c(&quot;sábado&quot;,&quot;domingo&quot;),
                               &quot;weekend&quot;, &quot;weekday&quot;)</code></pre>
+<pre class="r"><code>install.packages(&quot;lattice&quot;)</code></pre>
+<pre><code>## Warning: package &#39;lattice&#39; is in use and will not be installed</code></pre>
 <pre class="r"><code>library(lattice)
 library(dplyr)</code></pre>
 <pre class="r"><code>subdata &lt;- dataimpute  %&gt;% group_by(weektype, interval)  %&gt;% summarise(meansteps = mean(steps))</code></pre>
