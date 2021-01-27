@@ -20,7 +20,6 @@ In order to achieve better manipulation of the data is required to make some tra
 
 ```r
 data$date <- as.Date(data$date)
-data$day <- as.factor(weekdays(data$date))
 ```
 
 
@@ -30,7 +29,7 @@ With the tapply function we get a vector in which each element is the total numb
 
 
 ```r
-stepsperday <-tapply(data$steps, data$date, sum, na.rm =TRUE)
+stepsperday <-tapply(data$steps, data$date, sum)
 ```
 
 Then, with the hist function we can make an histogram of the total number of steps taken each day 
@@ -39,8 +38,8 @@ Then, with the hist function we can make an histogram of the total number of ste
 ```r
 hist(stepsperday, col = "wheat", main = "Histogram of 
      the total number steps taken each day")
-abline(v = mean(stepsperday), col = "blue", lwd = 4)
-abline(v = median(stepsperday), col = "red", lwd = 4)
+abline(v = mean(stepsperday, na.rm =TRUE), col = "blue", lwd = 4)
+abline(v = median(stepsperday, na.rm =TRUE), col = "red", lwd = 4)
 legend("topright", lty = 1, col = c("blue","red"), 
        legend = c("Mean", "Median"),
        cex = 0.75)
@@ -53,12 +52,24 @@ As you can see, the blue and the read lines represents the mean and the median, 
 
 
 ```r
-mean <- mean(stepsperday) 
-
-median <- median(stepsperday)
+mean <- mean(stepsperday, na.rm = TRUE) 
+median <- median(stepsperday, na.rm = TRUE)
+mean
 ```
 
-The mean is 9354.2295082 and the median 10395.
+```
+## [1] 10766.19
+```
+
+```r
+median
+```
+
+```
+## [1] 10765
+```
+
+The mean is 1.0766189\times 10^{4} and the median 10765.
 
   
 ## **What is the average daily activity pattern?**   
@@ -75,7 +86,7 @@ With this vector we can plot a time series that shows the daily pattern activity
 ```r
 par(mar=c(4,6,4,4))
 plot(names(avstepsinterval),avstepsinterval, type = "l", ylab = "average steps
-     across all the days", xlab = "5-minute interval", main ="Average daily 
+     across all the days", xlab = "5-minute interval", main ="Daily 
      pattern activity")
 ```
 
@@ -136,13 +147,14 @@ sum(is.na(dataimpute))
 
 We can see that in *dataimpute* there are 0 missing values
 
+With this new dataset we proceed to make an histogram of the total number of steps taken each day 
 
 
 ```r
 stepsperdaynew <-tapply(dataimpute$steps, dataimpute$date, sum)
 hist(stepsperdaynew, col = "wheat", main = "Histogram of 
      the total number steps taken each day")
-abline(v = mean(stepsperdaynew), col = "blue", lwd = 4)
+abline(v = mean(stepsperdaynew), col = "blue", lwd = 6)
 abline(v = median(stepsperdaynew), col = "red", lwd = 4)
 legend("topright", lty = 1, col = c("blue","red"), 
        legend = c("Mean", "Median"),
@@ -152,6 +164,65 @@ legend("topright", lty = 1, col = c("blue","red"),
 <img src="PA1_template_files/figure-html/histogram_Impute-1.png" style="display: block; margin: auto;" />
 
 
+```r
+meannew <- mean(stepsperdaynew) 
+medianew <- median(stepsperdaynew)
+meannew
+```
 
-## Are there differences in activity patterns between weekdays and weekends?   
+```
+## [1] 10766.19
+```
 
+```r
+medianew
+```
+
+```
+## [1] 10766.19
+```
+
+The mean is 1.0766189\times 10^{4} and the median 1.0766189\times 10^{4}.
+
+As we can see in the histogram, the main impacts of imputing the missing data is that the median and the mean fully equalize and the form distribution gets more symmetric.
+
+
+## **Are there differences in activity patterns between weekdays and weekends?**
+
+
+```r
+dataimpute$day <- as.factor(weekdays(dataimpute$date))
+dataimpute$weektype <- ifelse(dataimpute$day %in% c("sábado","domingo"),
+                              "weekend", "weekday")
+```
+
+
+
+```r
+library(lattice)
+library(dplyr)
+```
+
+
+```r
+subdata <- dataimpute  %>% group_by(weektype, interval)  %>% summarise(meansteps = mean(steps))
+```
+
+```
+## `summarise()` regrouping output by 'weektype' (override with `.groups` argument)
+```
+
+```r
+xyplot(meansteps ~ interval | weektype,
+       data = subdata,
+       xlab = "5-minute interval", 
+       ylab = "average steps across all the days",
+       type ="l",
+       lwd= 2,
+       layout = c(1, 2),
+       main = "Daily pattern activity - Difference between weekdays and 
+       weekends"
+)
+```
+
+![](PA1_template_files/figure-html/dplyr_lattice -1.png)<!-- -->
